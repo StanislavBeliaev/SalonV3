@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@config "../tailwind.config.js";
+
+:root {
+  --color-primary: #fb4b75;
+  --color-secondary: #16a897;
+}
+
+.body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'open sans', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.navbarBtn {
+    @apply border-b-2 border-transparent;
+}
+.navbarBtn:hover {
+    @apply border-b-2 border-primary;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+.signUpBtn {
+    @apply text-sm text-black font-bold rounded-md bg-white border-gray-300 border-1;
+}
+.signUpBtn:hover {
+    @apply text-white bg-primary border-primary;
+}
