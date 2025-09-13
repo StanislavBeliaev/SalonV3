@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Header from "@/components/widgets/navigation/Header";
 import Footer from "@/components/widgets/navigation/Footer";
+import { category } from "@/api/category";
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -26,11 +27,12 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const categoryDataPopular = await category.getCategoryPopular(1);
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -46,7 +48,7 @@ export default function RootLayout({
             <main className="container mx-auto max-w-[1440px] pt-16 flex-grow">
               {children}
             </main>
-            <Footer />
+            <Footer servicesDataPopular={categoryDataPopular} />
           </div>
         </Providers>
       </body>

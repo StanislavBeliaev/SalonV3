@@ -19,5 +19,15 @@ export const category = {
       console.error(error);
       return [];
     }
+  },
+  getCategoryPopular: async (cityId: number): Promise<Category[]> => {
+    try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/popular?cityId=${cityId}`);
+    const data = await response.json();
+    return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   }
 }
