@@ -260,6 +260,7 @@ import { MapPoint } from "@/components/shared/icons/mapPoint";
   };
   
   export default function NavbarComponent() {
+    const cityName = localStorage.getItem('name');
     const icons = {
         chevron: <ChevronDown fill="currentColor" size={16} height={16} width={16} />,
         scale: <Scale className="text-warning" fill="currentColor" size={30} height={30} width={30} />,
@@ -277,6 +278,7 @@ import { MapPoint } from "@/components/shared/icons/mapPoint";
             <AcmeLogo />
             <p className="hidden sm:block font-bold text-inherit">Salon</p>
             <MapPoint />
+            <p className="hidden sm:block font-600 text-gray-500 text-[14px]">{cityName}</p>
           </NavbarBrand>
           <NavbarContent className="hidden sm:flex gap-3">
             <NavbarItem>

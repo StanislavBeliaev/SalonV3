@@ -1,5 +1,7 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+const BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://test3.salon.balinasoft.com/api/v1'
+  : 'http://localhost:3000/api';
+  
 class ApiError extends Error {
   constructor(message, status, data) {
     super(message);
@@ -11,12 +13,12 @@ class ApiError extends Error {
 
 export async function fetcher(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
-  
   const defaultOptions = {
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
+    credentials: 'include',
     next: { 
       revalidate: 60,
       ...options.next, 

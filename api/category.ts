@@ -8,6 +8,7 @@ export interface Category {
   parentName: string;
   salonsCount: number;
   tags: string;
+  cityId: number;
 }
 export const category = {
   getCategory: async (params: Record<string, string>): Promise<Category[]> => {

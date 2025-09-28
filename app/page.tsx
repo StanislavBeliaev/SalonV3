@@ -7,28 +7,31 @@ import ServiceCarouselList from "@/components/features/ServiceCarouselList";
 import { service } from "@/api/service";
 import Banner from "@/components/features/Banner";
 import { SyncWithLocalStorage } from "@/components/features/LocalStorage";
-import { geo } from "@/api/geo";
+import { cookies } from 'next/headers';
 
 export default async function Home() {
-  const [bannerData, categoryData, servicesDataPopular, servicesDataNew, chosenCity] =
+  const cookieStore = await cookies();
+  const cityId = cookieStore.get('City_id')?.value || 1;
+  const [bannerData, categoryData, servicesDataPopular, servicesDataNew,] =
     await Promise.all([
-      banner.getBanner(),
-      category.getCategory({ level: "0" }),
+      banner.getBanner(cityId as number),
+      category.getCategory({ level: "0", cityId: cityId as string }),
       service.getServices({
         size: "10",
         sortBy: "POPULARITY",
         sizeType: "STANDARD",
+        cityId: cityId as string,
       }),
       service.getServices({
         size: "10",
         sortBy: "NEWNESS",
         sizeType: "STANDARD",
+        cityId: cityId as string,
       }),
-      geo.getChosenCity(),
     ]);
   return (
     <div className="flex flex-col items-center w-full gap-10 pb-42">
-      <SyncWithLocalStorage data={chosenCity} storageKey="chosenCity" />
+      <SyncWithLocalStorage />
       <BannerSlider banners={bannerData} />
       <SalonCarouselList />
       <CategoryCarouselList categoryData={categoryData} />

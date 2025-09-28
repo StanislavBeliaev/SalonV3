@@ -1,19 +1,25 @@
 'use client';
 import { useEffect } from 'react';
+import { geo } from '@/api/geo';
 
-interface SyncWithLocalStorageProps {
-  data: any;
-  storageKey: string;
+interface ChosenCity {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;    
 }
-
-export function SyncWithLocalStorage({ data, storageKey }: SyncWithLocalStorageProps) {
+export function SyncWithLocalStorage() {
   useEffect(() => {
+    async function getChosenCity() {
+    const data = await geo.getChosenCity() as unknown as ChosenCity;
     if (data) {
         for (const item in data) {
-            localStorage.setItem(item, JSON.stringify(data[item]));
+            localStorage.setItem(item, data[item as keyof ChosenCity].toString());
         }
     }
-  }, [data, storageKey]);
+    }
+    getChosenCity();
+  }, []);
 
   return null;
 }
