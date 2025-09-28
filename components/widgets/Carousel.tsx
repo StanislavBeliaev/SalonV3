@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, ReactNode, useRef, useMemo } from "react";
+import { useState, useEffect, ReactNode, useRef } from "react";
 import { Button } from "@heroui/react";
 import SectionHeader from "@/components/shared/ui/SectionHeader";
 
@@ -27,11 +27,6 @@ export const CarouselList = ({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
-
-  const offset = useMemo(() => {
-    const length = data.length / 2 
-    return currentIndex >= length ? 1.025 : 1.02
-  }, [isMobile, currentIndex, data.length])
 
   useEffect(() => {
     const handleResize = () => {
@@ -99,7 +94,6 @@ export const CarouselList = ({
       )}
 
       <div
-        ref={carouselRef}
         className="relative w-full overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -108,11 +102,12 @@ export const CarouselList = ({
         <div
           className="flex transition-transform duration-300 ease-in-out p-1"
           style={{
-            transform: `translateX(-${currentIndex * (isMobile ? 85 / offset : 100 / cardsPerView)}%)`,
+            transform: `translateX(-${currentIndex * (carouselRef.current?.offsetWidth || 0)}px)`,
           }}
         >
           {data.map((item, index) => (
             <div
+              ref={index === 0 ? carouselRef : null}
               key={index}
               className="flex-shrink-0 px-2 "
               style={{ width: `${isMobile ? 85 : 100 / cardsPerView}%` }}

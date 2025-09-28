@@ -1,3 +1,4 @@
+import { http } from "./core";
 export interface Category {
   id: number;
   name: string;
@@ -12,18 +13,18 @@ export const category = {
   getCategory: async (params: Record<string, string>): Promise<Category[]> => {
     const p = new URLSearchParams(params);
     try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category?${p.toString()}`);
-    const data = await response.json();
+    const response = await http.get(`/category?${p.toString()}`);
+    const data = await response;
     return data;
     } catch (error) {
       console.error(error);
       return [];
     }
   },
-  getCategoryPopular: async (cityId: number): Promise<Category[]> => {
+  getCategoryPopular: async (cityId: number | string): Promise<Category[]> => {
     try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/popular?cityId=${cityId}`);
-    const data = await response.json();
+    const response = await http.get(`/category/popular?cityId=${cityId}`);
+    const data = await response;
     return data;
     } catch (error) {
       console.error(error);

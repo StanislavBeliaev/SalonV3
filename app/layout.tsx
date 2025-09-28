@@ -9,6 +9,8 @@ import { fontSans } from "@/config/fonts";
 import Header from "@/components/widgets/navigation/Header";
 import Footer from "@/components/widgets/navigation/Footer";
 import { category } from "@/api/category";
+import { getCityId } from "@/utils/getCityId";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -32,7 +34,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const categoryDataPopular = await category.getCategoryPopular(1);
+  const cityId = await getCityId();
+  const categoryDataPopular = await category.getCategoryPopular(cityId);
   return (
     <html suppressHydrationWarning lang="en">
       <head />

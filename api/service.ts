@@ -1,3 +1,5 @@
+import { http } from "./core";
+
 export interface Service {
     arrayBounds: Array<number>;
     ascending: boolean;
@@ -29,8 +31,8 @@ export const service = {
     getServices: async (params: Record<string, string>): Promise<Service[]> => {
         const p = new URLSearchParams(params);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service/selection?${p.toString()}`);
-            const data = await response.json();
+            const response = await http.get(`/service/selection?${p.toString()}`);
+            const data = await response;
             return data;
         } catch (error) {
             console.error(error);

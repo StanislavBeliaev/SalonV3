@@ -13,6 +13,7 @@ import {
     Button,
   } from "@heroui/react";
   import Link from "next/link";
+import { MapPoint } from "@/components/shared/icons/mapPoint";
   
   export const AcmeLogo = () => {
     return (
@@ -275,6 +276,7 @@ import {
           <NavbarBrand className="mr-4">
             <AcmeLogo />
             <p className="hidden sm:block font-bold text-inherit">Salon</p>
+            <MapPoint />
           </NavbarBrand>
           <NavbarContent className="hidden sm:flex gap-3">
             <NavbarItem>
