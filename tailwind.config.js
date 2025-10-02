@@ -9,6 +9,15 @@ const config = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        fs14: "14px",
+        fs15: "15px",
+        fs16: "16px",
+        fs17: "17px",
+        fs18: "18px",
+        fs20: "20px",
+        fs28: "28px",
+      },
       fontWeight: {
         400: "400",
         500: "500",
@@ -23,6 +32,7 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
+        "open-sans": ["var(--font-open-sans)"],
         mono: ["var(--font-mono)"],
       },
     },

@@ -17,7 +17,7 @@
 }
 
 .navbarBtn {
-    @apply border-b-2 border-transparent;
+    @apply border-b-2 border-transparent font-400 text-fs18;
 }
 .navbarBtn:hover {
     @apply border-b-2 border-primary;
@@ -30,7 +30,7 @@
     display: none;  /* Chrome, Safari and Opera */
 }
 .signUpBtn {
-    @apply text-sm text-black font-bold rounded-md bg-white border-gray-300 border-1;
+    @apply text-fs14 text-black font-bold rounded-md bg-white border-gray-300 border-1;
 }
 .signUpBtn:hover {
     @apply text-white bg-primary border-primary;
