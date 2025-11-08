@@ -16,6 +16,7 @@ const config = {
         fs17: "17px",
         fs18: "18px",
         fs20: "20px",
+        fs22: "22px",
         fs28: "28px",
       },
       fontWeight: {

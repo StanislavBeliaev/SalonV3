@@ -15,7 +15,6 @@ export const geo = {
         try {
             const response = await http.get(`/city/chosen?cityName=Минск`);
             const data = await response;
-            console.log('data', data);
             return data;
         } catch (error) {
             console.error(error);

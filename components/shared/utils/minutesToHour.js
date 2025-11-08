@@ -1,5 +1,7 @@
 export default function minutesToHour(minutes) {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    return remainingMinutes ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+    return hours ? 
+    (remainingMinutes ? `${hours}ч ${remainingMinutes}мин` : `${hours}ч`) : 
+    `${remainingMinutes}мин`;
 }

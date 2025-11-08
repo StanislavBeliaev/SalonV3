@@ -32,7 +32,7 @@ export default function SalonCard({ salon }: SalonCardProps) {
       </CardBody>
       <CardFooter className="text-small justify-between flex-col items-start gap-1">
         <p className="text-base font-bold">{salon.name}</p>
-        <p className="text-default-500 text-xs line-clamp-2 text-start">{salon.contactAddress}</p>
+        <p className="text-default-500 text-fs14 line-clamp-2 text-start">{salon.contactAddress}</p>
       </CardFooter>
     </Card>
   );

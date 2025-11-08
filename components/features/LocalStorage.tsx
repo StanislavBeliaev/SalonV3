@@ -8,15 +8,23 @@ interface ChosenCity {
   latitude: number;
   longitude: number;    
 }
+
 export function SyncWithLocalStorage() {
   useEffect(() => {
     async function getChosenCity() {
-    const data = await geo.getChosenCity() as unknown as ChosenCity;
-    if (data) {
-        for (const item in data) {
-            localStorage.setItem(item, data[item as keyof ChosenCity].toString());
+      try {
+        const data = await geo.getChosenCity() as unknown as ChosenCity;
+        if (data) {
+          for (const item in data) {
+            const value = data[item as keyof ChosenCity];
+            if (value !== null && value !== undefined) {
+              localStorage.setItem(item, value.toString());
+            }
+          }
         }
-    }
+      } catch (error) {
+        console.error('Error syncing city data:', error);
+      }
     }
     getChosenCity();
   }, []);

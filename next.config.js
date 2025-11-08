@@ -8,15 +8,14 @@ const nextConfig = {
       },
     ];
   },
-    images: {
-      remotePatterns: [
-        {
-          protocol: 'https',
-          hostname: 'test3.salon.balinasoft.com',
-          port: '',
-          pathname: '/images/**',
-        },
-      ],
-    },
-  }
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'test3.salon.balinasoft.com',
+      },
+    ],
+  },
+}
+
 module.exports = nextConfig;
