@@ -3,6 +3,8 @@ import {
   Navbar,
   NavbarBrand,
   NavbarContent,
+  NavbarItem,
+  Button,
 } from "@heroui/react";
 import {
   Logo,
@@ -11,38 +13,54 @@ import {
   UserProfile,
   NavigationMenu,
 } from "./ui";
-  
-export default function NavbarComponent() {  
+import Link from "next/link";
+
+export default function NavbarComponent() {
   const navigationItems = [
     { label: "Услуги", href: "#" },
     { label: "Салоны", href: "#" },
     {
       label: "Инфо",
       children: [
-        { label: "Autoscaling", description: "ACME scales apps based on demand and load" },
-        { label: "Usage Metrics", description: "Real-time metrics to debug issues" },
-        { label: "Production Ready", description: "ACME runs on ACME, join us at web scale" },
-        { label: "+99% Uptime", description: "High availability and uptime guarantees" },
-        { label: "+Supreme Support", description: "Support team ready to respond" },
-      ]
+        {
+          label: "Autoscaling",
+          description: "ACME scales apps based on demand and load",
+        },
+        {
+          label: "Usage Metrics",
+          description: "Real-time metrics to debug issues",
+        },
+        {
+          label: "Production Ready",
+          description: "ACME runs on ACME, join us at web scale",
+        },
+        {
+          label: "+99% Uptime",
+          description: "High availability and uptime guarantees",
+        },
+        {
+          label: "+Supreme Support",
+          description: "Support team ready to respond",
+        },
+      ],
     },
     { label: "Партнерство", href: "#" },
   ];
 
   const handleSearch = (value: string) => {
-    console.log('Search:', value);
+    console.log("Search:", value);
   };
 
   const handleProfileClick = () => {
-    console.log('Profile clicked');
+    console.log("Profile clicked");
   };
 
   const handleSettingsClick = () => {
-    console.log('Settings clicked');
+    console.log("Settings clicked");
   };
 
   const handleLogoutClick = () => {
-    console.log('Logout clicked');
+    console.log("Logout clicked");
   };
 
   return (
@@ -63,9 +81,17 @@ export default function NavbarComponent() {
             onSettingsClick={handleSettingsClick}
             onLogoutClick={handleLogoutClick}
           />
+          <NavbarItem>
+            <Button 
+              color="primary"
+              radius="full" 
+              className="hover:cursor-pointer hover:!bg-primary hover:!opacity-100"
+            >
+              Войти
+            </Button>
+          </NavbarItem>
         </NavbarContent>
-      </div>   
+      </div>
     </Navbar>
   );
 }
-  

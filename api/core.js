@@ -1,6 +1,6 @@
 const BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://test3.salon.balinasoft.com/api/v1'
-  : 'http://localhost:3000/api';
+  : ' http://192.168.100.135:3000/api';
   
 class ApiError extends Error {
   constructor(message, status, data) {

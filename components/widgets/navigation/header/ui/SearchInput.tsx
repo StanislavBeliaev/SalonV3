@@ -24,6 +24,7 @@ export const SearchInput = ({
       placeholder={placeholder}
       size="sm"
       startContent={<SearchIcon size={18} height={18} width={18} />}
+      radius="full"
       type="search"
       onChange={(e) => onSearch?.(e.target.value)}
     />

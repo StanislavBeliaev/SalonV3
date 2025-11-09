@@ -30,7 +30,7 @@
     display: none;  /* Chrome, Safari and Opera */
 }
 .signUpBtn {
-    @apply text-fs14 text-black font-bold rounded-md bg-white border-gray-300 border-1;
+    @apply md:text-fs14 text-black font-600 rounded-md bg-white border-gray-300 border-1;
 }
 .signUpBtn:hover {
     @apply text-white bg-primary border-primary;
