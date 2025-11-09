@@ -1,11 +1,12 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Button, Input, Tab, Tabs } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { useAuthStore } from "@/components/shared/stores/authStore";
+import { PhoneNumberInput } from "@/components/shared/ui/phone-number-input";
 
 type LoginMode = "mail" | "phone";
 
@@ -28,17 +29,33 @@ export function LoginForm({ className = "" }: LoginFormProps = {}) {
 
   const [mode, setMode] = useState<LoginMode>("mail");
   const [identifier, setIdentifier] = useState("");
+  const [countryId, setCountryId] = useState<string>("ru");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
 
   const isLoading = status === "loading";
-  const error = useMemo(() => localError ?? storeError, [localError, storeError]);
+  const error = useMemo(
+    () => localError ?? storeError,
+    [localError, storeError]
+  );
+
+  useEffect(() => {
+    setIdentifier("");
+    setLocalError(null);
+    resetError();
+    if (mode === "phone") {
+      setCountryId("ru");
+    }
+  }, [mode, resetError]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!identifier.trim()) {
+    const trimmedIdentifier = identifier.trim();
+    if (!trimmedIdentifier) {
       setLocalError(
-        mode === "mail" ? "Введите адрес электронной почты" : "Введите номер телефона",
+        mode === "mail"
+          ? "Введите адрес электронной почты"
+          : "Введите номер телефона"
       );
       return;
     }
@@ -51,19 +68,10 @@ export function LoginForm({ className = "" }: LoginFormProps = {}) {
     resetError();
 
     try {
-      const rawIdentifier = identifier.trim();
-      const sanitizedIdentifier =
-        mode === "phone" ? rawIdentifier.replace(/\s+/g, "") : rawIdentifier;
-
-      const normalizedIdentifier =
-        mode === "phone" && !sanitizedIdentifier.startsWith("+")
-          ? `+${sanitizedIdentifier}`
-          : sanitizedIdentifier;
-
       await login(
         mode === "mail"
-          ? { mail: normalizedIdentifier, password }
-          : { phone: normalizedIdentifier, password },
+          ? { mail: trimmedIdentifier, password }
+          : { phone: trimmedIdentifier, password }
       );
 
       const returnPath = searchParams?.get("returnPath");
@@ -84,30 +92,56 @@ export function LoginForm({ className = "" }: LoginFormProps = {}) {
           Введите данные, чтобы войти в личный кабинет.
         </p>
       </div>
-
-      <Tabs
-        size="sm"
-        selectedKey={mode}
-        onSelectionChange={(key) => setMode(key as LoginMode)}
-        className="w-full"
-      >
-        {loginModeTabs.map((tab) => (
-          <Tab key={tab.key} title={tab.title} />
-        ))}
-      </Tabs>
-
-      <Input
-        label={mode === "mail" ? "Email" : "Телефон"}
-        variant="bordered"
-        value={identifier}
-        onChange={(event) => setIdentifier(event.target.value)}
-        placeholder={mode === "mail" ? "user@example.com" : "+7 900 000 00 00"}
-        autoComplete={mode === "mail" ? "email" : "tel"}
-        data-testid="login-identifier"
-      />
+        <Tabs
+          size="sm"
+          radius="full"
+          color="primary"
+          classNames={{
+            tabList: "bg-white border-default-200 border-1 rounded-full w-[375px] mx-auto flex justify-center h-[46px]",
+            tab: "text-fs16 font-600 h-[36px]",
+          }}
+          selectedKey={mode}
+          onSelectionChange={(key) => setMode(key as LoginMode)}
+          className="w-full"
+        >
+          {loginModeTabs.map((tab) => (
+            <Tab key={tab.key} title={tab.title} />
+          ))}
+        </Tabs>
+      <div className="relative min-h-[76px]">
+        {mode === "mail" ? (
+          <Input
+            label="Email"
+            labelPlacement="outside"
+            variant="bordered"
+            value={identifier}
+            onChange={(event) => setIdentifier(event.target.value)}
+            placeholder="user@example.com"
+            autoComplete="email"
+            data-testid="login-identifier"
+            className="w-full"
+          />
+        ) : (
+          <PhoneNumberInput
+            label="Телефон"
+            value={identifier}
+            defaultCountryId={countryId}
+            onChange={setIdentifier}
+            onCountryChange={(country) => {
+              if (country?.id) {
+                setCountryId(country.id);
+              }
+            }}
+            required
+            className="w-full"
+          />
+        )}
+      </div>
 
       <Input
         label="Пароль"
+        labelPlacement="outside"
+        placeholder="Введите пароль"
         type="password"
         variant="bordered"
         value={password}
@@ -141,4 +175,3 @@ export function LoginForm({ className = "" }: LoginFormProps = {}) {
     </form>
   );
 }
-

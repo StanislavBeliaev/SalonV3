@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { PhoneNumberInput } from "@/components/shared/ui/phone-number-input";
 
 import { useAuthStore } from "@/components/shared/stores/authStore";
 
@@ -33,9 +34,11 @@ const initialState: RegistrationFormState = {
 
 export function RegisterForm({ className = "" }: RegisterFormProps = {}) {
   const [formState, setFormState] = useState<RegistrationFormState>(initialState);
+  const [identifier, setIdentifier] = useState("");
   const [smsStep, setSmsStep] = useState(false);
   const [smsCode, setSmsCode] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
+  const [countryId, setCountryId] = useState<string>("ru");
 
   const register = useAuthStore((state) => state.register);
   const confirmSms = useAuthStore((state) => state.confirmSms);
@@ -187,12 +190,15 @@ export function RegisterForm({ className = "" }: RegisterFormProps = {}) {
             inputMode="numeric"
             placeholder="Например, 1"
           />
-          <Input
+          <PhoneNumberInput
             label="Телефон"
-            variant="bordered"
-            value={formState.phone}
-            onChange={handleChange("phone")}
-            autoComplete="tel"
+            value={identifier}
+            onChange={setIdentifier}
+            onCountryChange={(country) => {
+              if (country?.id) {
+                setCountryId(country.id);
+              }
+            }}
             placeholder="+7 900 000 00 00"
           />
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <section className="flex min-h-full w-full">
-      <div className="flex w-full flex-1 items-stretch px-0 py-0">
-        <LoginForm className="sm:h-auto sm:justify-center" />
+      <div className="flex w-full flex-1 items-stretch px-0 py-6 sm:px-6 sm:py-10 lg:px-12">
+      <LoginForm className="sm:h-auto sm:justify-center" />
       </div>
     </section>
   );
