@@ -1,11 +1,7 @@
 "use client";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Button,
-} from "@heroui/react";
+import { useEffect } from "react";
+
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@heroui/react";
 import {
   Logo,
   LocationDisplay,
@@ -14,8 +10,17 @@ import {
   NavigationMenu,
 } from "./ui";
 import Link from "next/link";
+import { useAuthStore } from "@/components/shared/stores/authStore";
 
 export default function NavbarComponent() {
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const loadUser = useAuthStore((state) => state.loadUser);
+
+  useEffect(() => {
+    loadUser().catch(() => null);
+    console.log("user", user);
+  }, [loadUser]);
   const navigationItems = [
     { label: "Услуги", href: "#" },
     { label: "Салоны", href: "#" },
@@ -59,8 +64,8 @@ export default function NavbarComponent() {
     console.log("Settings clicked");
   };
 
-  const handleLogoutClick = () => {
-    console.log("Logout clicked");
+  const handleLogoutClick = async () => {
+    await logout();
   };
 
   return (
@@ -76,20 +81,40 @@ export default function NavbarComponent() {
 
         <NavbarContent as="div" className="items-center" justify="end">
           <SearchInput onSearch={handleSearch} />
-          <UserProfile
-            onProfileClick={handleProfileClick}
-            onSettingsClick={handleSettingsClick}
-            onLogoutClick={handleLogoutClick}
-          />
-          <NavbarItem>
-            <Button 
-              color="primary"
-              radius="full" 
-              className="hover:cursor-pointer hover:!bg-primary hover:!opacity-100"
-            >
-              Войти
-            </Button>
-          </NavbarItem>
+          {user ? (
+            <UserProfile
+              userName={[user.name, user.surname].filter(Boolean).join(" ") || undefined}
+              userEmail={user.email}
+              avatarSrc={user.smallAvatar}
+              onProfileClick={handleProfileClick}
+              onSettingsClick={handleSettingsClick}
+              onLogoutClick={handleLogoutClick}
+            />
+          ) : (
+            <NavbarItem>
+              <div className="flex items-center gap-3">
+                <Button
+                  as={Link}
+                  href="/login"
+                  color="default"
+                  radius="full"
+                  variant="bordered"
+                  className="hover:cursor-pointer"
+                >
+                  Войти
+                </Button>
+                <Button
+                  as={Link}
+                  href="/register"
+                  color="primary"
+                  radius="full"
+                  className="hover:cursor-pointer hover:!bg-primary hover:!opacity-100"
+                >
+                  Регистрация
+                </Button>
+              </div>
+            </NavbarItem>
+          )}
         </NavbarContent>
       </div>
     </Navbar>

@@ -49,7 +49,7 @@ export default async function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
             <Header />
-            <main className="container mx-auto max-w-[1440px] pt-16 flex-grow">
+            <main className="container mx-auto max-w-[1440px] flex-grow">
               {children}
             </main>
             <Footer servicesDataPopular={categoryDataPopular} />
