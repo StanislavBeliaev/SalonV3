@@ -73,7 +73,6 @@ export default function NavbarComponent() {
       <div className="flex justify-between items-center w-[1440px] mx-auto">
         <NavbarContent justify="start">
           <NavbarBrand className="mr-4">
-            <Logo />
             <LocationDisplay />
           </NavbarBrand>
           <NavigationMenu items={navigationItems} />
@@ -91,7 +90,7 @@ export default function NavbarComponent() {
               onLogoutClick={handleLogoutClick}
             />
           ) : (
-            <NavbarItem>
+            <NavbarItem className="hidden md:flex">
               <div className="flex items-center gap-3">
                 <Button
                   as={Link}

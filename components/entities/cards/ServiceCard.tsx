@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Button } from "@heroui/react";
 import minutesToHour from "@/utils/minutesToHour";
-import {Avatar, AvatarGroup} from "@heroui/react";
+import { Avatar, AvatarGroup } from "@heroui/react";
+import { Clocks } from "@/components/shared/ui/icons";
 interface Service {
   id: number;
   name: string;
@@ -24,35 +24,53 @@ interface Service {
 
 export default function ServiceCard({ service }: { service: Service }) {
   const currencySymbol = service.salon.currency.currencySymbol;
-  const displayPrice = service.exactPrice ? service.exactPrice : service.minPrice + ' - ' + service.maxPrice;
+  const displayPrice = service.exactPrice
+    ? service.exactPrice
+    : service.minPrice + " - " + service.maxPrice;
   const totalPictures = service.pictures.length;
   return (
-    <div className="flex flex-col w-full h-full rounded-lg shadow-sm border-t-2 border-l-2 border-r-2 border-gray-100">
+    <div className="flex flex-col w-full h-full rounded-lg shadow-sm border-t-2 border-l-2 border-r-2 border-gray-100 gap-2">
       <div className="flex items-start justify-between w-full h-full pt-4 px-4 ">
         <div className="flex gap-2 items-end">
-          <span className="text-fs16 md:text-fs18 font-600 line-clamp-2">{service.name}{" "}</span>
-          <span className="text-gray-500 text-fs16 md:text-fs18 whitespace-nowrap font-400"> — {minutesToHour(service.duration)}</span>
+          <span className="text-fs16 md:text-fs18 font-600 line-clamp-2">
+            {service.name}{" "}
+          </span>
         </div>
         {service.pictures[0]?.smallAvatar && (
-        <AvatarGroup
-          className="[&_*]:pointer-events-none [&_*]:hover:transform-none scale-75 sm:scale-100"
-          max={3}
-          total={totalPictures > 3 ? totalPictures : undefined}
-          size="sm"
+          <AvatarGroup
+            className="[&_*]:pointer-events-none [&_*]:hover:transform-none scale-75 sm:scale-100"
+            max={3}
+            isBordered
+            total={totalPictures > 3 ? totalPictures : undefined}
+            size="sm"
           >
-          {service.pictures.map((picture) => (
-            <Avatar key={picture.smallAvatar} src={picture.smallAvatar} />
-          ))}
-        </AvatarGroup>
+            {service.pictures.map((picture) => (
+              <Avatar key={picture.smallAvatar} src={picture.smallAvatar} />
+            ))}
+          </AvatarGroup>
         )}
       </div>
-      <div className="flex flex-col justify-between w-full h-full px-4 ">
-        <p className="md:text-fs16 text-fs14 font-400 text-gray-500">{service.salon.name}</p>
-        <p className="md:text-fs16 text-fs14 font-400 text-green-600">{service.onlineReservation ? '' : 'Запись только по телефону'}</p>
+      <div className="flex flex-col justify-between w-full h-full px-4">
+        <div className="flex items-center justify-between">
+          <p className="md:text-fs16 text-fs14 font-400 text-gray-500">
+            {service.salon.name}
+          </p>
+          <span className="flex items-center gap-1 text-gray-500 text-fs14 whitespace-nowrap font-600">
+            {minutesToHour(service.duration)}
+            <Clocks />
+          </span>
+        </div>
+        <p className="md:text-fs16 text-fs14 font-400 text-green-600">
+          {service.onlineReservation ? "" : "Запись только по телефону"}
+        </p>
       </div>
       <div className="flex items-center justify-between w-full h-full pb-4 px-4 ">
-        <p className="md:text-fs22 text-fs20 text-primary font-600">{displayPrice} {currencySymbol}</p>
-        <Button size="sm" className="signUpBtn">Записаться</Button>
+        <p className="md:text-fs22 text-fs20 text-primary font-600">
+          {displayPrice} {currencySymbol}
+        </p>
+        <Button size="sm" className="signUpBtn">
+          Записаться
+        </Button>
       </div>
     </div>
   );

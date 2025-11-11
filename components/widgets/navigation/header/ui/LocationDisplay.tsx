@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MapPoint } from "@/components/shared/icons/mapPoint";
+import { MapPoint } from "@/components/shared/ui/icons";
 import { geo } from '@/api/geo';
 
 interface LocationDisplayProps {
@@ -30,7 +30,7 @@ export const LocationDisplay = ({
   return (
     <div className={`flex items-center gap-1 ${className}`}>
       <MapPoint />
-      <p className="hidden sm:block font-600 text-gray-500 text-fs14" onClick={getCountry}>
+      <p className="font-600 text-gray-500 text-fs14" onClick={getCountry}>
         {cityName || ""}
       </p>
     </div>

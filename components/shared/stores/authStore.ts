@@ -71,6 +71,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       const user = await authApi.fetchCurrentUser();
       set({ user, status: "idle" });
+      console.log("user", user);
       return user;
     } catch (error) {
       if (
