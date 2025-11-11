@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@heroui/react";
 import {
-  Logo,
   LocationDisplay,
   SearchInput,
   UserProfile,
@@ -22,8 +21,8 @@ export default function NavbarComponent() {
     console.log("user", user);
   }, [loadUser]);
   const navigationItems = [
-    { label: "Услуги", href: "#" },
-    { label: "Салоны", href: "#" },
+    { label: "Услуги", href: "/category" },
+    { label: "Салоны", href: "/salons" },
     {
       label: "Инфо",
       children: [

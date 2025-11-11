@@ -1,6 +1,6 @@
 "use client";
-import CategoryCard from "../entities/cards/CategoryCard";
-import { CarouselList } from "../widgets/Carousel";
+import CategoryCard from "@/components/entities/cards/CategoryCard";
+import { CarouselList } from "@/components/widgets/Carousel";
 import { Category } from "@/api/category";
 
 export default function CategoryCarouselList({ categoryData }: { categoryData: Category[] }) {

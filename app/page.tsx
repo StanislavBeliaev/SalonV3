@@ -30,7 +30,7 @@ export default async function Home() {
       }),
     ]);
   return (
-    <div className="flex flex-col items-center w-full gap-10 pb-42 pt-16">
+    <div className="pageContainer">
       <SyncWithLocalStorage />
       <BannerSlider banners={bannerData} />
       <SalonCarouselList />

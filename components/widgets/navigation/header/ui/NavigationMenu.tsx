@@ -9,6 +9,7 @@ import {
 } from "@heroui/react";
 import Link from "next/link";
 import { ChevronDown } from "./icons/ChevronDown";
+import { usePathname } from "next/navigation";
 
 interface NavigationItem {
   label: string;
@@ -22,8 +23,14 @@ interface NavigationMenuProps {
 }
 
 export const NavigationMenu = ({ items, className = "" }: NavigationMenuProps) => {
+  const pathname = usePathname();
   const icons = {
     chevron: <ChevronDown fill="currentColor" size={16} height={16} width={16} />,
+  };
+
+  const isActive = (item: NavigationItem) => {
+    if (!item.href) return false;
+    return pathname === item.href || pathname.startsWith(item.href + '/');
   };
 
   const renderNavigationItem = (item: NavigationItem, index: number) => {
@@ -40,7 +47,7 @@ export const NavigationMenu = ({ items, className = "" }: NavigationMenuProps) =
                   radius="sm"
                   variant="light"
                 >
-                  <p className="text-medium navbarBtn mt-[2px]">{item.label}</p>
+                  <p className={`text-medium navbarBtn mt-[2px] ${isActive(item) ? "is-active" : ""}`}>{item.label}</p>
                 </Button>
               </DropdownTrigger>
             </NavbarItem>
@@ -70,7 +77,7 @@ export const NavigationMenu = ({ items, className = "" }: NavigationMenuProps) =
 
     return (
       <NavbarItem key={index}>
-        <Link href={item.href || "#"} className="navbarBtn">
+        <Link href={item.href || "#"} className={`navbarBtn ${isActive(item) ? "is-active" : ""}`}>
           {item.label}
         </Link>
       </NavbarItem>
