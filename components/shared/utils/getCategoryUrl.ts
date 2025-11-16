@@ -19,7 +19,7 @@ export function getCategoryUrl(
   // Формат: /catalog/1/services?subcategoryId=12
   // Где 1 - это parentId, 12 - это categoryId
   if (level === 1 && parentId) {
-    return `/catalog/${parentId}/services?subcategoryId=${categoryId}`;
+    return `/category/${parentId}/services?subcategoryId=${categoryId}`;
   }
   
   return `/category/${categoryId}`;

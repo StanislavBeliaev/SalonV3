@@ -16,13 +16,13 @@ export default async function Home() {
     await Promise.all([
       banner.getBanner(cityId as number),
       category.getCategory({ level: "0", cityId: cityId as string }),
-      service.getServices({
+      service.getSelectionServices({
         size: "10",
         sortBy: "POPULARITY",
         sizeType: "STANDARD",
         cityId: cityId as string,
       }),
-      service.getServices({
+      service.getSelectionServices({
         size: "10",
         sortBy: "NEWNESS",
         sizeType: "STANDARD",

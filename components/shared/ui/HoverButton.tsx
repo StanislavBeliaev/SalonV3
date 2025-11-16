@@ -27,7 +27,7 @@ export default function HoverButton({
       size={size}
       radius={radius}
       variant={variant}
-      className={`whitespace-nowrap text-fs17 hover:text-white hover:bg-primary hover:border-primary ${className}`}
+      className={`whitespace-nowrap text-fs17 font-[600] hover:text-white hover:bg-primary hover:border-primary ${className}`}
       onPress={onClick}
     >
       {buttonText}

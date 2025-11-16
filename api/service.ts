@@ -1,39 +1,50 @@
 import { http } from "./core";
 
+interface ServicePicture {
+    smallAvatar: string;
+}
+
+interface ServiceCurrency {
+    currencySymbol: string;
+}
+
+interface ServiceSalon {
+    name: string;
+    currency: ServiceCurrency;
+}
+
 export interface Service {
-    arrayBounds: Array<number>;
-    ascending: boolean;
-    categoryId: number;
-    cityId: number;
-    date: string;
-    deleted: boolean;
-    hidden: boolean;
-    masterId: number;
-    maxPrice: number;
-    minPrice: number;
-    page: number;
-    promocodeId: number;
-    salonId: Array<number>;
+    id?: number;
     serviceId: number;
-    size: number;
-    sizeType: "SMALLEST" | "SMALL" | "STANDARD" | "FULL";
-    sortBy: "PRICE" | "DURATION" | "POPULARITY" | "NEWNESS" | "DISTANCE";
-    subcategoryId: Array<number>;
-    tags: Array<string>;
-    timeHour: number;
-    timeMinute: number;
-    timeNano: number;
-    timeSecond: number;
-    userLat: number;
-    userLng: number;
+    name: string;
+    smallAvatar?: string;
+    salon: ServiceSalon;
+    exactPrice?: number | null;
+    minPrice: number;
+    maxPrice: number;
+    duration: number;
+    onlineReservation: boolean;
+    pictures: ServicePicture[];
 }
 export const service = {
-    getServices: async (params: Record<string, string>): Promise<Service[]> => {
+    getSelectionServices: async (params: Record<string, string>): Promise<Service[]> => {
         const p = new URLSearchParams(params);
         try {
             const response = await http.get(`/service/selection?${p.toString()}`);
             const data = await response;
             return data;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+    getServices: async (params: Record<string, string>): Promise<Service[]> => {
+        const p = new URLSearchParams(params);
+        try {
+            const response = await http.get(`/service/page?${p.toString()}`);
+            const data = await response;
+            console.log(data.content);
+            return data.content;
         } catch (error) {
             console.error(error);
             return [];

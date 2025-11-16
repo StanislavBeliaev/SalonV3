@@ -1,26 +1,9 @@
+"use client";
 import { Button } from "@heroui/react";
 import minutesToHour from "@/utils/minutesToHour";
 import { Avatar, AvatarGroup } from "@heroui/react";
 import { Clocks } from "@/components/shared/ui/icons";
-interface Service {
-  id: number;
-  name: string;
-  smallAvatar?: string;
-  salon: {
-    name: string;
-    currency: {
-      currencySymbol: string;
-    };
-  };
-  exactPrice: number;
-  minPrice: number;
-  maxPrice: number;
-  duration: number;
-  onlineReservation: boolean;
-  pictures: Array<{
-    smallAvatar: string;
-  }>;
-}
+import type { Service } from "@/api/service";
 
 export default function ServiceCard({ service }: { service: Service }) {
   const currencySymbol = service.salon.currency.currencySymbol;
