@@ -4,34 +4,27 @@ import { salons } from "@/api/salons";
 import SalonCard from "../entities/cards/SalonCard";
 import { CarouselList } from "../widgets/Carousel";
 import FilterSideScroll from "../shared/ui/FilterSideScroll";
-import { category } from "@/api/category";
+import { useCategories } from "@/components/shared/hooks/useCategories";
 
 export default function SalonList() {
   const [salonsData, setSalonsData] = useState<any[]>([]);
   const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [elements, setElements] = useState<any[]>([]);
-
+  const {categories, loading, error } = useCategories();
   const handleCategoryClick = (categoryId: number) => {
     setCategoryId(categoryId);
-  };
-  const fetchCategory = async () => {
-    const categoryData = await category.getCategory({level: "0"});
-    setElements(categoryData);
-    if (categoryData.length > 0) {
-      handleCategoryClick(categoryData[0].id);
-    }
-  };
-  const fetchSalons = async () => {
-    if (categoryId) {
-    const salonsData = await salons.getSalons({categoryId: categoryId?.toString() || ""});
-      setSalonsData(salonsData);
-    }
-  };
+  };  
   useEffect(() => {
-    fetchCategory();
-  }, []);
+    if (categories.length > 0 && !categoryId) {
+      setCategoryId(categories[0].id);
+    }
+  }, [categories, categoryId]);
 
   useEffect(() => {
+    const fetchSalons = async () => {
+      if (!categoryId) return;
+      const salonsData = await salons.getSalons({categoryId: categoryId?.toString() || "", sizeType: "FULL"});
+      setSalonsData(salonsData);
+    };
     fetchSalons();
   }, [categoryId]);
 
@@ -46,7 +39,7 @@ export default function SalonList() {
       )}
       filterComponent={
       <FilterSideScroll 
-      elements={elements}
+      elements={categories}
       handleCategoryClick={handleCategoryClick} 
       activeCategoryId={categoryId}
       />}

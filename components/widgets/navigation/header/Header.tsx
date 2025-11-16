@@ -1,7 +1,13 @@
 "use client";
 import { useEffect } from "react";
 
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@heroui/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+} from "@heroui/react";
 import {
   LocationDisplay,
   SearchInput,
@@ -10,12 +16,13 @@ import {
 } from "./ui";
 import Link from "next/link";
 import { useAuthStore } from "@/components/shared/stores/authStore";
+import { useRouter } from "next/navigation";
 
 export default function NavbarComponent() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const loadUser = useAuthStore((state) => state.loadUser);
-
+  const router = useRouter();
   useEffect(() => {
     loadUser().catch(() => null);
     console.log("user", user);
@@ -71,7 +78,8 @@ export default function NavbarComponent() {
     <Navbar isBordered maxWidth="full">
       <div className="flex justify-between items-center w-[1440px] mx-auto">
         <NavbarContent justify="start">
-          <NavbarBrand className="mr-4">
+          <NavbarBrand className="mr-4 flex items-baseline gap-2">
+            <span onClick={() => router.push("/")} className="text-fs28 font-600 hover:cursor-pointer">Salon</span>
             <LocationDisplay />
           </NavbarBrand>
           <NavigationMenu items={navigationItems} />
@@ -81,7 +89,9 @@ export default function NavbarComponent() {
           <SearchInput onSearch={handleSearch} />
           {user ? (
             <UserProfile
-              userName={[user.name, user.surname].filter(Boolean).join(" ") || undefined}
+              userName={
+                [user.name, user.surname].filter(Boolean).join(" ") || undefined
+              }
               userEmail={user.email}
               avatarSrc={user.smallAvatar}
               onProfileClick={handleProfileClick}

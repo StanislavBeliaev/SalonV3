@@ -68,8 +68,8 @@ export const CarouselList = ({
     if (!touchStart || !touchEnd) return;
 
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 5;
-    const isRightSwipe = distance < -5;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
 
     if (isLeftSwipe && canGoNext) {
       nextSlide();
@@ -108,7 +108,7 @@ export const CarouselList = ({
           {data.map((item, index) => (
             <div
               ref={index === 0 ? carouselRef : null}
-              key={index}
+              key={item?.id ?? item?.key ?? index}
               className="flex-shrink-0 px-2 "
               style={{ width: `${isMobile ? 85 : 100 / cardsPerView}%` }}
             >

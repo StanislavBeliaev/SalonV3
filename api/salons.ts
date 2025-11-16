@@ -13,5 +13,21 @@ export const salons = {
       console.error(error);
       return [];
     }
+  },
+  likeSalon: async (salonId: number): Promise<void> => {
+    try {
+      await http.post(`/salon/${salonId}/like`, {});
+    } catch (error) {
+      console.error("Error liking salon:", error);
+      throw error;
+    }
+  },
+  unlikeSalon: async (salonId: number): Promise<void> => {
+    try {
+      await http.delete(`/salon/${salonId}/like`);
+    } catch (error) {
+      console.error("Error unliking salon:", error);
+      throw error;
+    }
   }
 }
