@@ -12,7 +12,7 @@ export default function ServiceCard({ service }: { service: Service }) {
     : service.minPrice + " - " + service.maxPrice;
   const totalPictures = service.pictures.length;
   return (
-    <div className="flex flex-col w-full h-full rounded-lg shadow-sm border-t-2 border-l-2 border-r-2 border-gray-100 gap-2">
+    <div className="group flex flex-col w-full h-full rounded-lg shadow-sm hover:shadow-md transition-all duration-100 border-t-2 border-l-2 border-r-2 border-gray-100 gap-2">
       <div className="flex items-start justify-between w-full h-full pt-4 px-4 ">
         <div className="flex gap-2 items-end">
           <span className="text-fs16 md:text-fs18 font-600 line-clamp-2">
@@ -51,7 +51,10 @@ export default function ServiceCard({ service }: { service: Service }) {
         <p className="md:text-fs22 text-fs20 text-primary font-600">
           {displayPrice} {currencySymbol}
         </p>
-        <Button size="sm" className="signUpBtn">
+        <Button 
+          size="sm" 
+          className="md:text-[14px] text-black font-[600] rounded-md bg-white border-gray-300 border-1 hover:text-white hover:bg-primary hover:border-primary group-hover:text-white group-hover:bg-primary group-hover:border-primary transition-all duration-100"
+        >
           Записаться
         </Button>
       </div>

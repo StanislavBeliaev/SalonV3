@@ -43,7 +43,6 @@ export const service = {
         try {
             const response = await http.get(`/service/page?${p.toString()}`);
             const data = await response;
-            console.log(data.content);
             return data.content;
         } catch (error) {
             console.error(error);
