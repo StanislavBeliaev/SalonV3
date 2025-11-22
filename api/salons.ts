@@ -1,6 +1,8 @@
 import { http } from "./core";
-interface Salon {
+export interface Salon {
     categoryId: null | number;
+    name: string;
+    id: number;
 }
 export const salons = {
   getSalons: async (params: Record<string, string>): Promise<Salon[]> => {

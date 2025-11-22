@@ -16,7 +16,7 @@
     line-height: 1.5;
 }
 .pageContainer {
-    @apply flex flex-col items-center w-full gap-4 pb-42 pt-8 md:pt-10 px-8;
+    @apply flex flex-col items-center w-full gap-4 pb-42 pt-8 md:pt-10 px-2;
 }
 .navbarBtn {
     @apply border-b-2 border-transparent font-400 text-fs18;
