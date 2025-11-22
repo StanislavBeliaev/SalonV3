@@ -21,8 +21,8 @@ export default function ServiceCard({ service }: { service: Service }) {
         </div>
         {service.pictures[0]?.smallAvatar && (
           <AvatarGroup
-            className="[&_*]:pointer-events-none [&_*]:hover:transform-none scale-75 sm:scale-100"
-            max={3}
+            className="[&_*]:pointer-events-none [&_*]:hover:transform-none scale-75 sm:scale-100 flex-row-reverse"
+            max={totalPictures > 3 ? 2 : 3}
             isBordered
             total={totalPictures > 3 ? totalPictures : undefined}
             size="sm"

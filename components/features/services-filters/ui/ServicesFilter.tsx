@@ -21,7 +21,16 @@ export const ServicesFilter = ({ categories, bounds, salons }: ServicesFilterPro
 
     const initialSubCategoryIds = searchParams.getAll("subcategoryId");
     const initialSalonIds = searchParams.getAll("salonId");
-    const currentSort = searchParams.get("sortBy") || "POPULARITY";
+    
+    const urlSortBy = searchParams.get("sortBy");
+    const urlAscending = searchParams.get("ascending");
+    let currentSort = "POPULARITY";
+    
+    if (urlSortBy === "PRICE") {
+        currentSort = urlAscending === "true" ? "PRICE_ASC" : "PRICE_DESC";
+    } else if (urlSortBy) {
+        currentSort = urlSortBy;
+    }
     
     const [selectedCategories, setSelectedCategories] = useState<string[]>(initialSubCategoryIds);
     const [selectedSalons, setSelectedSalons] = useState<string[]>(initialSalonIds);
@@ -29,28 +38,45 @@ export const ServicesFilter = ({ categories, bounds, salons }: ServicesFilterPro
         bounds?.minPrice || 0,
         bounds?.maxPrice || 1000
     ]);
+    const [showAllSalons, setShowAllSalons] = useState(false);
 
     const sortOptions = [
-        { key: "POPULARITY", label: "По популярности" },
-        { key: "NEWNESS", label: "По новизне" },
-        { key: "PRICE_ASC", label: "Сначала дешевые" },
-        { key: "PRICE_DESC", label: "Сначала дорогие" },
+        { key: "POPULARITY", label: "По популярности", ascending: false },
+        { key: "NEWNESS", label: "По новизне", ascending: false },
+        { key: "PRICE_ASC", label: "Сначала дешевые", ascending: true },
+        { key: "PRICE_DESC", label: "Сначала дорогие", ascending: false },
     ];
 
     useEffect(() => {
         if (bounds) {
              const urlMin = searchParams.get("minPrice");
              const urlMax = searchParams.get("maxPrice");
-             setPriceRange([
-                 urlMin ? Number(urlMin) : bounds.minPrice,
-                 urlMax ? Number(urlMax) : bounds.maxPrice
-             ]);
+             
+             let minPrice = bounds.minPrice;
+             let maxPrice = bounds.maxPrice;
+             
+             if (urlMin) {
+                 const parsedMin = Number(urlMin);
+                 minPrice = (parsedMin >= bounds.minPrice && parsedMin <= bounds.maxPrice) 
+                     ? parsedMin 
+                     : bounds.minPrice;
+             }
+             
+             if (urlMax) {
+                 const parsedMax = Number(urlMax);
+                 maxPrice = (parsedMax >= bounds.minPrice && parsedMax <= bounds.maxPrice && parsedMax >= minPrice) 
+                     ? parsedMax 
+                     : bounds.maxPrice;
+             }
+             
+             setPriceRange([minPrice, maxPrice]);
         }
     }, [bounds, searchParams]);
 
     const handleCategoryChange = (values: string[]) => {
         setSelectedCategories(values);
-        updateUrl(values, selectedSalons, priceRange, currentSort);
+        const sortOption = sortOptions.find(option => option.key === currentSort);
+        updateUrl(values, selectedSalons, null, currentSort, sortOption?.ascending || false);
     };
 
     const handlePriceChange = (value: number | number[]) => {
@@ -61,20 +87,22 @@ export const ServicesFilter = ({ categories, bounds, salons }: ServicesFilterPro
 
     const handlePriceCommit = (value: number | number[]) => {
         if (Array.isArray(value)) {
-             updateUrl(selectedCategories, selectedSalons, value, currentSort);
+             const sortOption = sortOptions.find(option => option.key === currentSort);
+             updateUrl(selectedCategories, selectedSalons, value, currentSort, sortOption?.ascending || false);
         }
     }
 
     const handleSortChange = (value: string) => {
-        updateUrl(selectedCategories, selectedSalons, priceRange, value);
+        updateUrl(selectedCategories, selectedSalons, priceRange, value, sortOptions.find(option => option.key === value)?.ascending || false);
     };
 
     const handleSalonChange = (values: string[]) => {
         setSelectedSalons(values);
-        updateUrl(selectedCategories, values, priceRange, currentSort);
+        const sortOption = sortOptions.find(option => option.key === currentSort);
+        updateUrl(selectedCategories, values, null, currentSort, sortOption?.ascending || false);
     };
 
-    const updateUrl = (categories: string[], salons: string[], price: number[], sort: string) => {
+    const updateUrl = (categories: string[], salons: string[], price: number[] | null, sort: string, ascending: boolean = false) => {
         const params = new URLSearchParams(searchParams.toString());
         
         params.delete("subcategoryId");
@@ -83,9 +111,25 @@ export const ServicesFilter = ({ categories, bounds, salons }: ServicesFilterPro
         params.delete("salonId");
         salons.forEach(id => params.append("salonId", id));
 
-        params.set("minPrice", price[0].toString());
-        params.set("maxPrice", price[1].toString());
-        params.set("sortBy", sort);
+        if (price) {
+            params.set("minPrice", price[0].toString());
+            params.set("maxPrice", price[1].toString());
+        } else {
+            params.delete("minPrice");
+            params.delete("maxPrice");
+        }
+        
+        const isPriceSort = sort === "PRICE_ASC" || sort === "PRICE_DESC";
+        
+        if (isPriceSort) {
+            params.set("sortBy", "PRICE");
+            params.set("ascending", ascending.toString());
+        } else {
+            params.delete("ascending");
+            params.set("sortBy", sort);
+        }
+        
+        params.delete("page");
         
         router.push(`?${params.toString()}`, { scroll: false });
     };
@@ -93,7 +137,7 @@ export const ServicesFilter = ({ categories, bounds, salons }: ServicesFilterPro
     if (!categories.length && !bounds && !salons.length) return null;
 
     return (
-        <div className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-sm">
+        <div className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.1)]">
             <div>
                 <h3 className="text-lg font-semibold mb-4">Сортировка</h3>
                 <SelectComponent 
@@ -142,17 +186,27 @@ export const ServicesFilter = ({ categories, bounds, salons }: ServicesFilterPro
             {salons && salons.length > 0 && (
                 <div>
                 <h3 className="text-lg font-semibold mb-4">Салоны</h3>
-                <CheckboxGroup
-                    value={selectedSalons}
-                    onValueChange={handleSalonChange}
-                    color="primary"
-                >
-                    {salons.map((salon) => (
-                        <Checkbox key={salon.id} value={salon.id?.toString() || ""}>
-                            {salon.name || "Салон не найден"}
-                        </Checkbox>
-                    ))}
-                </CheckboxGroup>
+                <div className={showAllSalons ? "max-h-78 overflow-y-auto" : ""}>
+                    <CheckboxGroup
+                        value={selectedSalons}
+                        onValueChange={handleSalonChange}
+                        color="primary"
+                    >
+                        {(showAllSalons ? salons : salons.slice(0, 10)).map((salon) => (
+                            <Checkbox key={salon.id} value={salon.id?.toString() || ""}>
+                                {salon.name || "Салон не найден"}
+                            </Checkbox>
+                        ))}
+                    </CheckboxGroup>
+                </div>
+                {salons.length > 10 && (
+                    <button
+                        onClick={() => setShowAllSalons(!showAllSalons)}
+                        className="mt-2 text-sm text-primary hover:underline"
+                    >
+                        {showAllSalons ? "Скрыть" : "Показать все"}
+                    </button>
+                )}
                 </div>
             )}
         </div>

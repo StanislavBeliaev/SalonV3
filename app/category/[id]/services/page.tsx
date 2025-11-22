@@ -1,10 +1,7 @@
 import { category } from "@/api/category";
 import { service } from "@/api/service";
 import { salons } from "@/api/salons";
-import { BreadcrumbsSection } from "@/components/features/Breadcrumbs";
-import { ServicesFilter } from "@/components/features/services-filters/ui/ServicesFilter";
-import { ServicesGrid } from "@/components/widgets/services/ServicesGrid";
-import PageTitle from "@/components/widgets/PageTitle";
+import { ServicesPageContent } from "@/components/widgets/services/ServicesPageContent";
 import { cookies } from "next/headers";
 
 export default async function ServicesPage({ 
@@ -41,13 +38,23 @@ export default async function ServicesPage({
          }
     }
 
+    const currentPage = sp.page ? Number(sp.page) : 0;
+    
     const queryParams: Record<string, any> = {
         categoryId: id,
         size: "16",
         sizeType: "STANDARD",
         cityId: cityId,
-        sortBy: sp.sortBy || "POPULARITY",
+        page: currentPage,
     };
+
+    const sortBy = sp.sortBy || "POPULARITY";
+    queryParams.sortBy = sortBy;
+    
+    if (sortBy === "PRICE" && sp.ascending !== undefined) {
+        const ascendingValue = Array.isArray(sp.ascending) ? sp.ascending[0] : sp.ascending;
+        queryParams.ascending = ascendingValue === "true";
+    }
 
     if (subCategoryIds.length > 0) {
         queryParams.subcategoryId = subCategoryIds;
@@ -64,7 +71,7 @@ export default async function ServicesPage({
             parentId: id,
         }),
         service.getServices(queryParams),
-        service.getBounds(Number(id),salonIds.map(String), subCategoryIds.map(String), cityId),
+        service.getBounds(Number(id), salonIds.map(String), subCategoryIds.map(String), cityId),
         salons.getSalons({categoryId: id, cityId: cityId}),
     ]);
     const subCategoryName = categoryData[0]?.parentName || "Категория";
@@ -75,21 +82,13 @@ export default async function ServicesPage({
     ];
 
     return (
-        <div className="pageContainer">
-            <BreadcrumbsSection items={breadcrumbs} />
-            <PageTitle title={subCategoryName} buttonType="map" buttonText="Смотреть в режиме карты" />
-            <div className="flex justify-between w-full gap-4">
-                <aside className="w-1/4">
-                    <ServicesFilter 
-                        categories={categoryData} 
-                        bounds={boundsData} 
-                        salons={salonsData}
-                    />
-                </aside>
-                <div className="flex-1">
-                    <ServicesGrid services={servicesData} />
-                </div>
-            </div>
-        </div>
+        <ServicesPageContent
+            categoryData={categoryData}
+            servicesData={servicesData}
+            boundsData={boundsData}
+            salonsData={salonsData}
+            subCategoryName={subCategoryName}
+            breadcrumbs={breadcrumbs}
+        />
     );
 }

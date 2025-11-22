@@ -51,15 +51,20 @@ export const service = {
             return [];
         }
     },
-    getServices: async (params: Record<string, any>): Promise<Service[]> => {
+    getServices: async (params: Record<string, any>): Promise<{ content: Service[], totalPages: number, totalElements: number, number: number }> => {
         const p = createSearchParams(params);
         try {
             const response = await http.get(`/service/page?${p.toString()}`);
             const data = await response;
-            return data.content;
+            return {
+                content: data.content || [],
+                totalPages: data.totalPages || 0,
+                totalElements: data.totalElements || 0,
+                number: data.number || 0
+            };
         } catch (error) {
             console.error(error);
-            return [];
+            return { content: [], totalPages: 0, totalElements: 0, number: 0 };
         }
     },
     getBounds: async (categoryId: number, salonId: Array<string>, subcategoryId: Array<string>, cityId: number | string) => {
