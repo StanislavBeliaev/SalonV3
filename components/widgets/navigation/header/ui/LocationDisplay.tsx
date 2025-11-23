@@ -1,37 +1,32 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { MapPoint } from "@/components/shared/ui/icons";
 import { geo } from '@/api/geo';
+import { useCityStore } from '@/components/shared/stores/cityStore';
 
 interface LocationDisplayProps {
   className?: string;
+  onClick?: () => void;
 }
 
 export const LocationDisplay = ({ 
-  className = "" 
+  className = "",
+  onClick
 }: LocationDisplayProps) => {
-  const [cityName, setCityName] = useState<string | null>(null);
+  const city = useCityStore((state) => state.city);
+
   const getCountry = async () => {
     const params = {
       withCities: "true",
       withActiveCities: "true",
     }
     const country = await geo.getCountry(params);
-    console.log(country)
   }
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedCityName = localStorage.getItem('name');
-      setCityName(storedCityName);
-    }
-  }, []);
-
   return (
-    <div className={`flex items-center gap-1 ${className}`}>
+    <div className={`flex items-center gap-1 ${className}`} onClick={onClick}>
       <MapPoint />
       <p className="font-600 text-gray-500 text-fs14" onClick={getCountry}>
-        {cityName || ""}
+        {city?.name || ""}
       </p>
     </div>
   );

@@ -13,14 +13,47 @@ export interface Country {
 }
 
 export const geo = {
-  getChosenCity: async (): Promise<void> => {
+  getCityByIp: async (): Promise<string | null> => {
     try {
-      const response = await http.get(`/city/chosen?cityName=Минск`);
+      const response = await fetch('https://api.sypexgeo.net/pnuX2/json');
+      const data = await response.json();
+      return data?.city?.name_ru || null;
+    } catch (error) {
+      console.error('API города лежит.', error);
+      return null;
+    }
+  },
+  getChosenCity: async (cityName?: string, isClient: boolean = false): Promise<any> => {
+    try {
+      const url = cityName 
+        ? `/city/chosen?cityName=${encodeURIComponent(cityName)}`
+        : '/city/chosen';
+      
+      if (isClient && typeof window !== 'undefined') {
+        const apiUrl = `/api${url}`;
+        
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch city');
+        }
+        
+        const data = await response.json();
+        return data;
+      }
+      
+      const response = await http.get(url);
       const data = await response;
       return data;
     } catch (error) {
       console.error(error);
-      return;
+      return null;
     }
   },
   getCountry: async (params: Record<string, string> = {}): Promise<Country[]> => {

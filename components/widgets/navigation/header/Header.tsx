@@ -74,13 +74,17 @@ export default function NavbarComponent() {
     await logout();
   };
 
+  const openModalCitySelection = () => {
+    console.log("Open modal city selection");
+  };
+
   return (
     <Navbar isBordered maxWidth="full">
       <div className="flex justify-between items-center w-[1440px] mx-auto">
         <NavbarContent justify="start">
           <NavbarBrand className="mr-4 flex items-baseline gap-2">
             <span onClick={() => router.push("/")} className="text-fs28 font-600 hover:cursor-pointer">Salon</span>
-            <LocationDisplay />
+            <LocationDisplay onClick={() => openModalCitySelection()}/>
           </NavbarBrand>
           <NavigationMenu items={navigationItems} />
         </NavbarContent>

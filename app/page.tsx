@@ -6,7 +6,6 @@ import SalonCarouselList from "@/components/features/SalonCarouselList";
 import ServiceCarouselList from "@/components/features/ServiceCarouselList";
 import { service } from "@/api/service";
 import Banner from "@/components/features/Banner";
-import { SyncWithLocalStorage } from "@/components/features/LocalStorage";
 import { cookies } from 'next/headers';
 
 export default async function Home() {
@@ -31,7 +30,6 @@ export default async function Home() {
     ]);
   return (
     <div className="pageContainer">
-      <SyncWithLocalStorage />
       <BannerSlider banners={bannerData} />
       <SalonCarouselList />
       <CategoryCarouselList categoryData={categoryData} />

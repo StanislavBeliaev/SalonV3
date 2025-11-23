@@ -9,6 +9,7 @@ import Footer from "@/components/widgets/navigation/Footer";
 import { category } from "@/api/category";
 import { getCityId } from "@/utils/getCityId";
 import MobileNavigation from "@/components/widgets/navigation/mobileHeader/MobileHeader";
+import { CityInitializer } from "@/components/features/CityInitializer";
 
 export const metadata: Metadata = {
   title: {
@@ -46,6 +47,7 @@ export default async function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <CityInitializer />
           <div className="relative flex flex-col h-screen">
             <Header />
             <main className="container mx-auto max-w-[1440px] flex-grow pb-16 md:pb-0">

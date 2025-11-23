@@ -1,21 +1,45 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Card, CardBody, CardFooter, Image, Button } from "@heroui/react";
-import { salons } from "@/api/salons";
+import { salons, Salon } from "@/api/salons";
 import { HeartIcon } from "@/components/shared/ui/icons";
-
-interface Salon {
-  id: number;
-  name: string;
-  contactAddress: string;
-  smallAvatar?: string;
-  rating?: number;
-  liked?: boolean;
-}
 
 interface SalonCardProps {
   salon: Salon;
 }
+
+const StarRating = ({ rating = 0 }: { rating: number }) => {
+  const validRating = Math.max(0, Math.min(5, rating || 0));
+  const fullStars = Math.max(0, Math.floor(validRating));
+  const hasHalfStar = validRating % 1 >= 0.5 && validRating < 5;
+  const emptyStars = Math.max(0, 5 - fullStars - (hasHalfStar ? 1 : 0));
+
+  return (
+    <div className="flex items-center gap-0.5" aria-label={`Рейтинг: ${validRating} из 5`}>
+      {fullStars > 0 && Array.from({ length: fullStars }).map((_, i) => (
+        <svg key={`full-${i}`} width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-yellow-400" aria-hidden="true">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+      {hasHalfStar && (
+        <svg width="16" height="16" viewBox="0 0 24 24" className="text-yellow-400" aria-hidden="true">
+          <defs>
+            <linearGradient id={`half-fill-${validRating}`}>
+              <stop offset="50%" stopColor="currentColor" />
+              <stop offset="50%" stopColor="transparent" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill={`url(#half-fill-${validRating})`}/>
+        </svg>
+      )}
+      {emptyStars > 0 && Array.from({ length: emptyStars }).map((_, i) => (
+        <svg key={`empty-${i}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-300" aria-hidden="true">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+    </div>
+  );
+};
 
 export default function SalonCard({ salon }: SalonCardProps) {
   const [isFavorite, setIsFavorite] = useState(salon.liked || false);
@@ -44,6 +68,13 @@ export default function SalonCard({ salon }: SalonCardProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getReviewText = (count?: number) => {
+    if (!count || count === 0) return "0 Отзывов";
+    if (count === 1) return "1 Отзыв";
+    if (count >= 2 && count <= 4) return `${count} Отзыва`;
+    return `${count} Отзывов`;
   };
 
   return (
@@ -79,7 +110,7 @@ export default function SalonCard({ salon }: SalonCardProps) {
       </CardBody>
       <CardFooter className="text-small justify-between flex-col items-start gap-1">
         <p className="text-base font-bold">{salon.name}</p>
-        <p className="text-default-500 text-fs14 line-clamp-2 text-start">{salon.contactAddress}</p>
+        <p className="text-default-500 text-fs14 text-start">{salon.contactAddress}</p>
       </CardFooter>
     </Card>
   );
