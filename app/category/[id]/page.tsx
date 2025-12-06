@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { category } from "@/api/category";
 import { BreadcrumbsSection } from "@/components/features/Breadcrumbs";
 import PageTitle from "@/components/widgets/PageTitle";
@@ -5,6 +6,19 @@ import CategoryGrid from "@/components/widgets/CategoryGrid";
 
 interface CategoryPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const categoryData = await category.getCategory({
+    level: "1",
+    parentId: id,
+  });
+  const categoryName = categoryData[0]?.parentName || "Категория";
+  
+  return {
+    title: categoryName,
+  };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {

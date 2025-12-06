@@ -1,8 +1,22 @@
+import { Metadata } from "next";
 import { category } from "@/api/category";
 import { service } from "@/api/service";
 import { salons } from "@/api/salons";
 import { ServicesPageContent } from "@/components/widgets/services/ServicesPageContent";
 import { cookies } from "next/headers";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const categoryData = await category.getCategory({
+    level: "1",
+    parentId: id,
+  });
+  const categoryName = categoryData[0]?.parentName || "Услуги";
+  
+  return {
+    title: `Услуги - ${categoryName}`,
+  };
+}
 
 export default async function ServicesPage({ 
     params, 

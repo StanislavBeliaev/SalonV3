@@ -1,7 +1,12 @@
+import { Metadata } from "next";
 import { category } from "@/api/category";
 import { BreadcrumbsSection } from "@/components/features/Breadcrumbs";
 import PageTitle from "@/components/widgets/PageTitle";
 import CategoryGrid from "@/components/widgets/CategoryGrid";
+
+export const metadata: Metadata = {
+  title: "Категории",
+};
 
 export default async function CategoryPage() {
   const categoryData = await category.getCategory({ level: "0" });

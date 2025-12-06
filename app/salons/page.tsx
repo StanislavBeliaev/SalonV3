@@ -1,7 +1,12 @@
+import { Metadata } from "next";
 import { category } from "@/api/category";
 import { salons } from "@/api/salons";
 import { SalonsPageContent } from "@/components/widgets/salons/SalonsPageContent";
 import { cookies } from "next/headers";
+
+export const metadata: Metadata = {
+  title: "Салоны",
+};
 
 export default async function SalonsPage({ 
     searchParams 

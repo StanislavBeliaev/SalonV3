@@ -81,7 +81,7 @@ export const CarouselList = ({
 
   return (
     <section
-      className="flex flex-col gap-6 relative max-w-[1440px] w-full"
+      className="flex flex-col gap-3 relative max-w-[1440px] w-full"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -109,7 +109,7 @@ export const CarouselList = ({
             <div
               ref={index === 0 ? carouselRef : null}
               key={item?.id ?? item?.key ?? index}
-              className="flex-shrink-0 px-2 "
+              className="flex-shrink-0 px-2"
               style={{ width: `${isMobile ? 85 : 100 / cardsPerView}%` }}
             >
               {renderItem(item)}

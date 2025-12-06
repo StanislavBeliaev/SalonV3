@@ -12,10 +12,7 @@ import MobileNavigation from "@/components/widgets/navigation/mobileHeader/Mobil
 import { CityInitializer } from "@/components/features/CityInitializer";
 
 export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
-  },
+  title: siteConfig.name,
   description: siteConfig.description,
   icons: {
     icon: "/favicon.ico",
