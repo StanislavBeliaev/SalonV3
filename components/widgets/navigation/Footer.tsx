@@ -18,10 +18,13 @@ const appStores = [
 
 export default function Footer({
   servicesDataPopular,
+  parentCategories,
+  citySlug,
 }: {
   servicesDataPopular: Category[];
+  parentCategories: Category[];
+  citySlug: string;
 }) {
-  const createLink = "/catalog";
   return (
     <footer className="w-full bg-gray-100">
       <div className="max-w-[1440px] mx-auto px-4 py-8">
@@ -49,18 +52,22 @@ export default function Footer({
               Популярные подкатегории
             </h3>
             <div className="grid grid-cols-2 gap-2">
-              {servicesDataPopular.map((link) => (
-                <Link
-                  key={link.id}
-                  href={
-                    createLink +
-                    `/${link.parentId}/services?subcategoryId=${link.id}`
-                  }
-                  className="md:text-base text-sm text-gray-500 hover:text-primary transition-colors md:whitespace-nowrap"
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {servicesDataPopular.map((link) => {
+                const parentCategory = parentCategories.find(cat => cat.id === link.parentId);
+                const parentSlug = parentCategory?.slug || '';
+                const href = citySlug && parentSlug 
+                  ? `/${citySlug}/${parentSlug}?subcategoryId=${link.id}`
+                  : '#';
+                return (
+                  <Link
+                    key={link.id}
+                    href={href}
+                    className="md:text-base text-sm text-gray-500 hover:text-primary transition-colors md:whitespace-nowrap"
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
             </div>
           </div>
 

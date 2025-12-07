@@ -76,6 +76,13 @@ export const useCityStore = create<CityStore>((set, get) => ({
   initializeCityFromUrl: async (cityName: string) => {
     if (typeof window === 'undefined') return;
 
+    const currentCity = get().city;
+    const citySlugFromName = cityName.toLowerCase().replace(/\s+/g, '-');
+    
+    if (currentCity && currentCity.slug === citySlugFromName) {
+      return;
+    }
+
     set({ isLoading: true, error: null });
 
     try {

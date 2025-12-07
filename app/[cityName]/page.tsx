@@ -9,7 +9,6 @@ import { service } from "@/api/service";
 import Banner from "@/components/features/Banner";
 import { cookies } from 'next/headers';
 import { geo } from "@/api/geo";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Главная",
@@ -25,18 +24,26 @@ export default async function CityHomePage({
   const cookieStore = await cookies();
   
   let cityId = cookieStore.get('City_id')?.value || "1";
+  const citySlugFromCookie = cookieStore.get('city_slug')?.value || cookieStore.get('slug')?.value;
   
-  try {
-    const cityData = await geo.getChosenCity(decodedCityName, false);
-    
-    if (cityData && cityData.id) {
-      cityId = cityData.id.toString();
-    } else {
-      redirect('/');
+  if (citySlugFromCookie !== decodedCityName) {
+    try {
+      const cityData = await geo.getChosenCity(decodedCityName, false);
+      if (cityData && cityData.id) {
+        cityId = cityData.id.toString();
+        cookieStore.set('City_id', cityId);
+        if (cityData.slug) {
+          cookieStore.set('city_slug', cityData.slug);
+          cookieStore.set('slug', cityData.slug);
+        }
+        if (cityData.name) {
+          cookieStore.set('city_name', cityData.name);
+          cookieStore.set('name', cityData.name);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching city:', error);
     }
-  } catch (error) {
-    console.error('Error fetching city:', error);
-    redirect('/');
   }
 
   const [bannerData, categoryData, servicesDataPopular, servicesDataNew,] =

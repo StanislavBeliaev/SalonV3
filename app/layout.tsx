@@ -7,9 +7,10 @@ import { fontSans, fontOpenSans } from "@/config/fonts";
 import Header from "@/components/widgets/navigation/header/Header";
 import Footer from "@/components/widgets/navigation/Footer";
 import { category } from "@/api/category";
-import { getCityId } from "@/utils/getCityId";
+import { getCityId } from "@/components/shared/utils/getCityId";
 import MobileNavigation from "@/components/widgets/navigation/mobileHeader/MobileHeader";
 import { CityInitializer } from "@/components/features/CityInitializer";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -32,7 +33,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cityId = await getCityId();
-  const categoryDataPopular = await category.getCategoryPopular(cityId);
+  const cookieStore = await cookies();
+  const citySlug = cookieStore.get('city_slug')?.value || cookieStore.get('slug')?.value || '';
+  const [categoryDataPopular, parentCategories] = await Promise.all([
+    category.getCategoryPopular(cityId),
+    category.getCategory({ level: "0", cityId: cityId.toString() }),
+  ]);
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -51,7 +57,7 @@ export default async function RootLayout({
               {children}
             </main>
             <MobileNavigation />
-            <Footer servicesDataPopular={categoryDataPopular} />
+            <Footer servicesDataPopular={categoryDataPopular} parentCategories={parentCategories} citySlug={citySlug} />
           </div>
         </Providers>
       </body>

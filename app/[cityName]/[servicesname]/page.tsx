@@ -5,13 +5,18 @@ import { salons } from "@/api/salons";
 import { ServicesPageContent } from "@/components/widgets/services/ServicesPageContent";
 import { cookies } from "next/headers";
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-  const { id } = await params;
-  const categoryData = await category.getCategory({
-    level: "1",
-    parentId: id,
+export async function generateMetadata({ params }: { params: Promise<{ cityName: string, servicesname: string }> }): Promise<Metadata> {
+  const { servicesname } = await params;
+  const cookieStore = await cookies();
+  const cityId = cookieStore.get('City_id')?.value || "1";
+  
+  const parentCategoryData = await category.getCategory({
+    level: "0",
+    cityId: cityId,
   });
-  const categoryName = categoryData[0]?.parentName || "Услуги";
+  
+  const parentCategory = parentCategoryData.find(cat => cat.slug === servicesname);
+  const categoryName = parentCategory?.name || "Услуги";
   
   return {
     title: `Услуги - ${categoryName}`,
@@ -22,10 +27,10 @@ export default async function ServicesPage({
     params, 
     searchParams 
 }: { 
-    params: Promise<{ id: string }>;
+    params: Promise<{ cityName: string, servicesname: string }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-    const { id } = await params;
+    const { servicesname } = await params;
     const sp = await searchParams;
     const cookieStore = await cookies();
     const cityId = cookieStore.get('City_id')?.value || "1";
@@ -52,10 +57,21 @@ export default async function ServicesPage({
          }
     }
 
+    const parentCategoryData = await category.getCategory({
+        level: "0",
+        cityId: cityId,
+    });
+
+    const parentCategory = parentCategoryData.find(cat => cat.slug === servicesname);
+    if (!parentCategory) {
+        console.log('Category not found', servicesname);
+    }
+
+    const categoryId = parentCategory?.id.toString() || "";
     const currentPage = sp.page ? Number(sp.page) : 0;
     
     const queryParams: Record<string, any> = {
-        categoryId: id,
+        categoryId: categoryId,
         size: "16",
         sizeType: "STANDARD",
         cityId: cityId,
@@ -79,20 +95,23 @@ export default async function ServicesPage({
     if (sp.minPrice) queryParams.minPrice = sp.minPrice;
     if (sp.maxPrice) queryParams.maxPrice = sp.maxPrice;
 
-    const [categoryData, servicesData, boundsData, salonsData] = await Promise.all([
+    const [categoryData, servicesData] = await Promise.all([
         category.getCategory({
             level: "1",
-            parentId: id,
+            parentId: categoryId,
         }),
         service.getServices(queryParams),
-        service.getBounds(Number(id), salonIds.map(String), subCategoryIds.map(String), cityId),
-        salons.getSalons({categoryId: id, cityId: cityId}),
+    ]);
+    
+    const [boundsData, salonsData] = await Promise.all([
+        service.getBounds(categoryId, salonIds.map(String), subCategoryIds.map(String), cityId),
+        salons.getSalons({slugId: servicesname, cityId: cityId}),
     ]);
     const subCategoryName = categoryData[0]?.parentName || "Категория";
     const breadcrumbs = [
         { label: "Главная", href: "/" },
         { label: "Категории", href: "/category" },
-        { label: subCategoryName, href: `/category/${id}` },
+        { label: subCategoryName, href: `/category/${servicesname}` },
     ];
 
     return (

@@ -17,19 +17,21 @@ import {
 import Link from "next/link";
 import { useAuthStore } from "@/components/shared/stores/authStore";
 import { useRouter } from "next/navigation";
+import { useCityStore } from "@/components/shared/stores/cityStore";
 
 export default function NavbarComponent() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const loadUser = useAuthStore((state) => state.loadUser);
+  const city = useCityStore((state) => state.city);
   const router = useRouter();
   useEffect(() => {
     loadUser().catch(() => null);
     console.log("user", user);
   }, [loadUser]);
   const navigationItems = [
-    { label: "Услуги", href: "/category" },
-    { label: "Салоны", href: "/salons" },
+    { label: "Услуги", href: `/${city?.slug || ""}/uslugi` },
+    { label: "Салоны", href: `/${city?.slug || ""}/salony` },
     {
       label: "Инфо",
       children: [

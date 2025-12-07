@@ -20,11 +20,7 @@ export default function CategoryCarouselList({
       data={categoryData}
       cardsPerPage={4}
       renderItem={(category) => {
-        const href = getCategoryUrl(
-          category.id, 
-          category.level, 
-          parentId || category.parentId
-        );
+        const href = getCategoryUrl(category.id.toString());
         
         return (
           <CategoryCard 

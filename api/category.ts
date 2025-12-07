@@ -1,4 +1,5 @@
 import { http } from "./core";
+
 export interface Category {
   id: number;
   name: string;
@@ -9,6 +10,7 @@ export interface Category {
   salonsCount: number;
   tags: string;
   cityId: number;
+  slug: string;
 }
 export const category = {
   getCategory: async (params: Record<string, string>): Promise<Category[]> => {

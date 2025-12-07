@@ -23,10 +23,10 @@ export const geo = {
       return null;
     }
   },
-  getChosenCity: async (cityName?: string, isClient: boolean = false): Promise<any> => {
+  getChosenCity: async (citySlug?: string, isClient: boolean = false): Promise<any> => {
     try {
-      const url = cityName 
-        ? `/city/chosen?cityName=${encodeURIComponent(cityName)}`
+      const url = citySlug 
+        ? `/city/chosen?citySlug=${encodeURIComponent(citySlug)}`
         : '/city/chosen';
       
       if (isClient && typeof window !== 'undefined') {

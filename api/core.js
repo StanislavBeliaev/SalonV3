@@ -11,11 +11,46 @@ class ApiError extends Error {
   }
 }
 
+async function getServerCookies() {
+  if (typeof window !== 'undefined') return {};
+  
+  try {
+    const { cookies: getCookies } = await import('next/headers');
+    const cookieStore = await getCookies();
+    const cookieMap = {};
+    
+    cookieStore.getAll().forEach(cookie => {
+      cookieMap[cookie.name] = cookie.value;
+    });
+    
+    return cookieMap;
+  } catch (error) {
+    return {};
+  }
+}
+
 export async function fetcher(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
+  
+  let cookieHeader = null;
+  
+  if (options.cookies) {
+    cookieHeader = Object.entries(options.cookies)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('; ');
+  } else if (typeof window === 'undefined') {
+    const serverCookies = await getServerCookies();
+    if (Object.keys(serverCookies).length > 0) {
+      cookieHeader = Object.entries(serverCookies)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('; ');
+    }
+  }
+  
   const defaultOptions = {
     headers: {
       'Content-Type': 'application/json',
+      ...(cookieHeader && { 'Cookie': cookieHeader }),
       ...options.headers,
     },
     credentials: 'include',
@@ -25,12 +60,14 @@ export async function fetcher(endpoint, options = {}) {
     },
   };
 
+  const { cookies, ...restOptions } = options;
+  
   const config = {
     ...defaultOptions,
-    ...options,
+    ...restOptions,
     headers: {
       ...defaultOptions.headers,
-      ...options.headers,
+      ...restOptions.headers,
     },
   };
 

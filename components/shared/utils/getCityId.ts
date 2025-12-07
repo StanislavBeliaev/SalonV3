@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 export async function getCityId() {
   const cookieStore = await cookies();
-  const cityId = cookieStore.get('cityId')?.value;
+  const cityId = cookieStore.get('City_id')?.value;
   return cityId ? parseInt(cityId) : 1;
 }
 
