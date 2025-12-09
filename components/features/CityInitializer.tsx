@@ -13,18 +13,16 @@ export function CityInitializer() {
     
     if (pathSegments.length > 0) {
       const firstSegment = pathSegments[0];
-      const excludedPaths = ['category', 'salons', 'login', 'register', 'api'];
+      const excludedPaths = ['uslugi', 'salons', 'login', 'register', 'api'];
       
       if (!excludedPaths.includes(firstSegment)) {
         const decodedCityName = decodeURIComponent(firstSegment);
-        initializeCityFromUrl(decodedCityName);
+        initializeCityFromUrl(decodedCityName)
         return;
       }
     }
-    
     initializeCity();
   }, [pathname, initializeCity, initializeCityFromUrl]);
 
   return null;
 }
-

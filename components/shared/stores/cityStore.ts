@@ -105,9 +105,9 @@ export const useCityStore = create<CityStore>((set, get) => ({
             }
           }
         }
-
         get().setCity(city);
       }
+      return data;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Ошибка при определении города';
       set({ error: errorMessage });

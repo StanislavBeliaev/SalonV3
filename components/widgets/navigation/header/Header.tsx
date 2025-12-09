@@ -27,7 +27,6 @@ export default function NavbarComponent() {
   const router = useRouter();
   useEffect(() => {
     loadUser().catch(() => null);
-    console.log("user", user);
   }, [loadUser]);
   const navigationItems = [
     { label: "Услуги", href: `/${city?.slug || ""}/uslugi` },

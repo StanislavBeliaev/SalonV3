@@ -7,60 +7,25 @@ import SalonCarouselList from "@/components/features/SalonCarouselList";
 import ServiceCarouselList from "@/components/features/ServiceCarouselList";
 import { service } from "@/api/service";
 import Banner from "@/components/features/Banner";
-import { cookies } from 'next/headers';
-import { geo } from "@/api/geo";
 
 export const metadata: Metadata = {
   title: "Главная",
 };
 
-export default async function CityHomePage({ 
-  params 
-}: { 
-  params: Promise<{ cityName: string }> 
-}) {
-  const { cityName } = await params;
-  const decodedCityName = decodeURIComponent(cityName);
-  const cookieStore = await cookies();
-  
-  let cityId = cookieStore.get('City_id')?.value || "1";
-  const citySlugFromCookie = cookieStore.get('city_slug')?.value || cookieStore.get('slug')?.value;
-  
-  if (citySlugFromCookie !== decodedCityName) {
-    try {
-      const cityData = await geo.getChosenCity(decodedCityName, false);
-      if (cityData && cityData.id) {
-        cityId = cityData.id.toString();
-        cookieStore.set('City_id', cityId);
-        if (cityData.slug) {
-          cookieStore.set('city_slug', cityData.slug);
-          cookieStore.set('slug', cityData.slug);
-        }
-        if (cityData.name) {
-          cookieStore.set('city_name', cityData.name);
-          cookieStore.set('name', cityData.name);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching city:', error);
-    }
-  }
-
-  const [bannerData, categoryData, servicesDataPopular, servicesDataNew,] =
+export default async function CityHomePage() {
+  const [bannerData, categoryData, servicesDataPopular, servicesDataNew] =
     await Promise.all([
-      banner.getBanner(Number(cityId)),
-      category.getCategory({ level: "0", cityId: cityId }),
+      banner.getBanner(),
+      category.getCategory({ level: "0" }),
       service.getSelectionServices({
         size: "10",
         sortBy: "POPULARITY",
         sizeType: "STANDARD",
-        cityId: cityId,
       }),
       service.getSelectionServices({
         size: "10",
         sortBy: "NEWNESS",
         sizeType: "STANDARD",
-        cityId: cityId,
       }),
     ]);
     

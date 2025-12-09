@@ -5,9 +5,9 @@ interface Banner {
     uri: string
 }
 export const banner = {
-    async getBanner(cityId: number = 1): Promise<Banner[]> {
+    async getBanner(): Promise<Banner[]> {
         try {
-            const response = await http.get(`/banners?cityId=${cityId}`)
+            const response = await http.get(`/banners`)
             const data = await response;
             return data
         } catch (error) {

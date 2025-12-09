@@ -5,7 +5,7 @@ export async function getCitySlug(): Promise<string | null> {
   const cookieStore = await cookies();
 
   const citySlug =
-    cookieStore.get("city_slug")?.value || cookieStore.get("slug")?.value;
+    cookieStore.get("City_slug")?.value || cookieStore.get("slug")?.value;
 
   if (citySlug) {
     return citySlug;

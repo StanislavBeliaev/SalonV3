@@ -67,12 +67,11 @@ export const service = {
             return { content: [], totalPages: 0, totalElements: 0, number: 0 };
         }
     },
-    getBounds: async (categoryId: string, salonId: Array<string>, subcategoryId: Array<string>, cityId: number | string) => {
+    getBounds: async (categoryId: string, salonId: Array<string>, subcategoryId: Array<string>) => {
         const body = {
             categoryId: categoryId,
             salonIds: salonId,
             subcategoryId: subcategoryId,
-            cityId: cityId
         };
         
         try {

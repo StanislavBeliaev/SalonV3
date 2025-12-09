@@ -3,12 +3,12 @@ import { category } from "@/api/category";
 import { service } from "@/api/service";
 import { salons } from "@/api/salons";
 import { ServicesPageContent } from "@/components/widgets/services/ServicesPageContent";
-import { cookies } from "next/headers";
+import { getCityId } from "@/components/shared/utils/getCityId";
 
 export async function generateMetadata({ params }: { params: Promise<{ cityName: string, servicesname: string }> }): Promise<Metadata> {
   const { servicesname } = await params;
-  const cookieStore = await cookies();
-  const cityId = cookieStore.get('City_id')?.value || "1";
+  const cityIdNumber = await getCityId();
+  const cityId = cityIdNumber.toString();
   
   const parentCategoryData = await category.getCategory({
     level: "0",
@@ -32,8 +32,8 @@ export default async function ServicesPage({
 }) {
     const { servicesname } = await params;
     const sp = await searchParams;
-    const cookieStore = await cookies();
-    const cityId = cookieStore.get('City_id')?.value || "1";
+    const cityIdNumber = await getCityId();
+    const cityId = cityIdNumber.toString();
     
     let subCategoryIds: number[] = [];
     const rawSubCat = sp.subcategoryId;
@@ -104,7 +104,7 @@ export default async function ServicesPage({
     ]);
     
     const [boundsData, salonsData] = await Promise.all([
-        service.getBounds(categoryId, salonIds.map(String), subCategoryIds.map(String), cityId),
+        service.getBounds(categoryId, salonIds.map(String), subCategoryIds.map(String)),
         salons.getSalons({slugId: servicesname, cityId: cityId}),
     ]);
     const subCategoryName = categoryData[0]?.parentName || "Категория";
