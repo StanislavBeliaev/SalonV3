@@ -1,6 +1,6 @@
-const BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://test3.salon.balinasoft.com/api/v1'
-  : ' http://192.168.100.135:3000/api';
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? process.env.NEXT_PUBLIC_BASE_URL_RELEASE
+  : process.env.NEXT_PUBLIC_BASE_URL_TEST;
   
 class ApiError extends Error {
   constructor(message, status, data) {
@@ -30,7 +30,8 @@ async function getServerCookies() {
 }
 
 export async function fetcher(endpoint, options = {}) {
-  const url = `${BASE_URL}${endpoint}`;
+  const isClient = typeof window !== 'undefined';
+  const url = isClient ? `/api${endpoint}` : `${BASE_URL}${endpoint}`;
   
   let cookieHeader = null;
   

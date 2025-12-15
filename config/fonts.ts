@@ -3,12 +3,16 @@ import { Fira_Code as FontMono, Inter as FontSans, Open_Sans as FontOpenSans } f
 export const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+  preload: true,
 });
 
 export const fontOpenSans = FontOpenSans({
   subsets: ["latin", "cyrillic"],
   variable: "--font-open-sans",
   weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  preload: true,
 });
 
 export const fontMono = FontMono({
