@@ -22,6 +22,18 @@ export async function generateMetadata({ params }: { params: Promise<{ cityName:
     title: `Услуги - ${categoryName}`,
   };
 }
+const getSubCategoryIds = (rawSubCat: string | string[] | undefined) => {
+    let subCategoryIds: number[] = [];
+    if (rawSubCat) {
+        if (Array.isArray(rawSubCat)) {
+            subCategoryIds = rawSubCat.map(Number).filter(n => !isNaN(n));
+        } else {
+            const num = Number(rawSubCat);
+            if (!isNaN(num)) subCategoryIds = [num];
+        }
+    }
+    return subCategoryIds;
+}
 
 export default async function ServicesPage({ 
     params, 
@@ -34,17 +46,8 @@ export default async function ServicesPage({
     const sp = await searchParams;
     const cityIdNumber = await getCityId();
     const cityId = cityIdNumber.toString();
-    
-    let subCategoryIds: number[] = [];
-    const rawSubCat = sp.subcategoryId;
-    if (rawSubCat) {
-        if (Array.isArray(rawSubCat)) {
-            subCategoryIds = rawSubCat.map(Number).filter(n => !isNaN(n));
-        } else {
-            const num = Number(rawSubCat);
-            if (!isNaN(num)) subCategoryIds = [num];
-        }
-    }
+
+    let subCategoryIds: number[] = getSubCategoryIds(sp.subcategoryId);
 
     let salonIds: number[] = [];
     const rawSalonIds = sp.salonId;
