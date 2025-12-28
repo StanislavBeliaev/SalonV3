@@ -9,7 +9,7 @@ import {
 } from "@heroui/react";
 import Link from "next/link";
 import { ChevronDown } from "./icons/ChevronDown";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface NavigationItem {
   label: string;
@@ -24,6 +24,7 @@ interface NavigationMenuProps {
 
 export const NavigationMenu = ({ items, className = "" }: NavigationMenuProps) => {
   const pathname = usePathname();
+  const router = useRouter();
   const icons = {
     chevron: <ChevronDown fill="currentColor" size={16} height={16} width={16} />,
   };
@@ -38,19 +39,17 @@ export const NavigationMenu = ({ items, className = "" }: NavigationMenuProps) =
       return (
         <NavbarItem key={index}>
           <Dropdown>
-            <NavbarItem>
-              <DropdownTrigger>
-                <Button
-                  disableRipple
-                  className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-                  endContent={icons.chevron}
-                  radius="sm"
-                  variant="light"
-                >
-                  <p className={`text-medium navbarBtn mt-[2px] ${isActive(item) ? "is-active" : ""}`}>{item.label}</p>
-                </Button>
-              </DropdownTrigger>
-            </NavbarItem>
+            <DropdownTrigger>
+              <Button
+                disableRipple
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                endContent={icons.chevron}
+                radius="sm"
+                variant="light"
+              >
+                <p className={`text-medium navbarBtn mt-[2px] ${isActive(item) ? "is-active" : ""}`}>{item.label}</p>
+              </Button>
+            </DropdownTrigger>
             <DropdownMenu
               aria-label={`${item.label} features`}
               itemClasses={{
@@ -61,12 +60,13 @@ export const NavigationMenu = ({ items, className = "" }: NavigationMenuProps) =
                 <DropdownItem
                   key={childIndex}
                   description={child.href ? undefined : "Feature description"}
+                  onClick={() => {
+                    if (child.href) {
+                      router.push(child.href);
+                    }
+                  }}
                 >
-                  {child.href ? (
-                    <Link href={child.href}>{child.label}</Link>
-                  ) : (
-                    child.label
-                  )}
+                  {child.label}
                 </DropdownItem>
               ))}
             </DropdownMenu>

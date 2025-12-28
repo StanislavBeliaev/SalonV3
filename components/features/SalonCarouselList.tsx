@@ -11,7 +11,6 @@ export default function SalonList() {
   const [salonsData, setSalonsData] = useState<any[]>([]);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const {categories, loading, error } = useCategories();
-  const city = useCityStore((state) => state.city);
   
   const handleCategoryClick = (categoryId: number) => {
     setCategoryId(categoryId);
@@ -24,16 +23,15 @@ export default function SalonList() {
 
   useEffect(() => {
     const fetchSalons = async () => {
-      if (!categoryId || !city?.id) return;
+      if (!categoryId) return;
       const salonsData = await salons.getSalons({
         categoryId: categoryId?.toString() || "", 
         sizeType: "FULL",
-        cityId: city.id.toString()
       });
       setSalonsData(salonsData);
     };
     fetchSalons();
-  }, [categoryId, city?.id]);
+  }, [categoryId]);
 
   return (
     <CarouselList
